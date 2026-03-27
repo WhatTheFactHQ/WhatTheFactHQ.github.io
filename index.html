@@ -1,10 +1,185 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
   <title>WhatTheFact</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0B0B0B;
+      color: white;
+    }
+
+    .container {
+      padding: 12px;
+    }
+
+    .card {
+      background: #121212;
+      border-radius: 16px;
+      margin-bottom: 16px;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .overlay {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.9));
+    }
+
+    .category {
+      font-size: 12px;
+      background: #EF4444;
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 6px;
+      margin-bottom: 6px;
+    }
+
+    .headline {
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .arrow {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+      font-size: 18px;
+      opacity: 0.7;
+      animation: bounce 1.2s infinite;
+    }
+
+    @keyframes bounce {
+      0%,100% { transform: translateX(0); }
+      50% { transform: translateX(5px); }
+    }
+
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: black;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .slide {
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .close {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .next {
+      position: absolute;
+      right: 20px;
+      bottom: 40px;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+  </style>
 </head>
-<body style="background:black; color:white; text-align:center; padding-top:50px;">
-  <h1>WhatTheFact 🚀</h1>
-  <p>Site coming soon...</p>
+
+<body>
+
+<div class="container" id="feed"></div>
+
+<div class="modal" id="modal">
+  <div class="close" onclick="closeModal()">✕</div>
+  <div class="slide" id="slideText"></div>
+  <div class="next" onclick="nextSlide()">→</div>
+</div>
+
+<script>
+
+const SHEET_ID = "1egfyMk99niiivs2usEi6oFEHWHFF6XR5QvbTpdlVxdw";
+const URL = `https://opensheet.elk.sh/${SHEET_ID}/Sheet1`;
+
+let slides = [];
+let currentSlide = 0;
+
+fetch(URL)
+  .then(res => res.json())
+  .then(data => {
+    const feed = document.getElementById("feed");
+
+    data.forEach(item => {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      card.innerHTML = `
+        <img src="${item.Image}">
+        <div class="overlay">
+          <div class="category">${item.Category || "General"}</div>
+          <div class="headline">${item.Title}</div>
+        </div>
+        <div class="arrow">→</div>
+      `;
+
+      card.onclick = () => openModal(item);
+
+      feed.appendChild(card);
+    });
+  });
+
+function openModal(item) {
+  slides = [
+    item.Title,
+    item.Hook,
+    item["Here’s what happened"],
+    item["Why it matters"],
+    item["What happens next"]
+  ];
+
+  currentSlide = 0;
+  document.getElementById("modal").style.display = "flex";
+  showSlide();
+}
+
+function showSlide() {
+  document.getElementById("slideText").innerText = slides[currentSlide];
+}
+
+function nextSlide() {
+  currentSlide++;
+  if (currentSlide >= slides.length) {
+    closeModal();
+  } else {
+    showSlide();
+  }
+}
+
+function closeModal() {
+  document.getElementById("modal").style.display = "none";
+}
+
+</script>
+
 </body>
 </html>
