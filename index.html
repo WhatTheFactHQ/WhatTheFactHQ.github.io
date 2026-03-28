@@ -1,231 +1,260 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>WhatTheFact</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-  <!-- FONT -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
 
   <style>
-    body {
+    :root {
+      --bg: #080808;
+      --surface: #111111;
+      --border: #1C1C1C;
+      --muted: #444;
+      --text: #F2F2F2;
+      --sub: #888;
+    }
+
+    * {
+      box-sizing: border-box;
       margin: 0;
-      font-family: 'Inter', sans-serif;
-      background: #0B0B0B;
-      color: white;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
     }
 
     /* HEADER */
     .header {
       display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      z-index: 50;
+    }
+
+    .brand-wrap {
+      display: flex;
       align-items: center;
       gap: 10px;
-      padding: 16px 12px;
-      border-bottom: 1px solid #222;
     }
 
     .logo {
-      height: 34px;
-      border-radius: 6px;
+      height: 32px;
+      border-radius: 8px;
     }
 
     .brand {
-      font-size: 20px;
-      font-weight: 700;
+      font-family: 'Syne';
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .brand span {
+      color: #FF3B3B;
     }
 
     .tagline {
-      font-size: 12px;
-      opacity: 0.7;
+      font-size: 11px;
+      color: var(--sub);
+    }
+
+    .live-dot {
+      font-size: 11px;
+      color: var(--sub);
     }
 
     /* FEED */
-    .container {
-      padding: 12px;
+    .feed {
+      padding: 16px;
     }
 
     .card {
-      border-radius: 16px;
-      margin-bottom: 18px;
+      border-radius: 20px;
       overflow: hidden;
-      position: relative;
+      margin-bottom: 14px;
       cursor: pointer;
-      background: #121212;
+      background: var(--surface);
+      border: 1px solid var(--border);
     }
 
-    .card img {
+    .card-img {
       width: 100%;
-      height: 220px;
+      height: 200px;
       object-fit: cover;
     }
 
-    .overlay {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      padding: 16px;
-      background: linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0.2));
-    }
-
-    .category {
-      font-size: 11px;
-      background: #EF4444;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-weight: 600;
-      margin-bottom: 6px;
-      display: inline-block;
+    .card-body {
+      padding: 14px;
     }
 
     .headline {
-      font-size: 20px;
+      font-size: 17px;
       font-weight: 700;
-      line-height: 1.3;
+      margin-bottom: 6px;
     }
 
-    .hook {
+    .hook-text {
       font-size: 13px;
-      opacity: 0.85;
-      margin-top: 4px;
-    }
-
-    .arrow {
-      position: absolute;
-      right: 12px;
-      bottom: 12px;
-      font-size: 18px;
-      opacity: 0.6;
+      color: #aaa;
     }
 
     /* MODAL */
     .modal {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      inset: 0;
       background: black;
       display: none;
+      flex-direction: column;
+      z-index: 100;
+    }
+
+    .modal.open {
+      display: flex;
+    }
+
+    .slide-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
       justify-content: center;
-      align-items: center;
-      text-align: center;
       padding: 20px;
+      text-align: center;
     }
 
-    .slide {
-      max-width: 420px;
-      font-size: 18px;
-      line-height: 1.5;
+    .slide-label {
+      font-size: 11px;
+      opacity: 0.5;
+      margin-bottom: 10px;
     }
 
-    .close {
-      position: absolute;
-      top: 20px;
-      left: 20px;
+    .slide-content {
       font-size: 24px;
-      cursor: pointer;
+      font-weight: bold;
+      line-height: 1.4;
     }
 
-    .next {
+    .tap-zones {
       position: absolute;
-      right: 20px;
-      bottom: 40px;
-      font-size: 24px;
-      cursor: pointer;
+      inset: 0;
+      display: flex;
+    }
+
+    .tap-zones div {
+      flex: 1;
     }
   </style>
 </head>
 
 <body>
 
-<!-- HEADER -->
-<div class="header">
-  <!-- 🔁 Replace logo.png with your actual filename -->
-  <img src="logo.png" class="logo">
-
-  <div>
-    <div class="brand">WhatTheFact</div>
-    <div class="tagline">Quick. Clear. News.</div>
+  <!-- HEADER -->
+  <div class="header">
+    <div class="brand-wrap">
+      <img src="logo.png" class="logo">
+      <div>
+        <div class="brand">What<span>The</span>Fact</div>
+        <div class="tagline">Quick. Clear. News.</div>
+      </div>
+    </div>
+    <div class="live-dot">Live</div>
   </div>
-</div>
 
-<!-- FEED -->
-<div class="container" id="feed"></div>
+  <!-- FEED -->
+  <div class="feed" id="feed">Loading...</div>
 
-<!-- MODAL -->
-<div class="modal" id="modal">
-  <div class="close" onclick="closeModal()">✕</div>
-  <div class="slide" id="slideText"></div>
-  <div class="next" onclick="nextSlide()">→</div>
-</div>
+  <!-- MODAL -->
+  <div class="modal" id="modal">
+    <div class="slide-wrap" id="slideWrap"></div>
 
-<script>
-const SHEET_ID = "1egfyMk99niiivs2usEi6oFEHWHFF6XR5QvbTpdlVxdw";
-const URL = `https://opensheet.elk.sh/${SHEET_ID}/Sheet1`;
+    <div class="tap-zones">
+      <div onclick="prevSlide()"></div>
+      <div onclick="nextSlide()"></div>
+    </div>
+  </div>
 
-let slides = [];
-let currentSlide = 0;
+  <script>
+    const SHEET_ID = "1egfyMk99niiivs2usEi6oFEHWHFF6XR5QvbTpdlVxdw";
+    const URL = `https://opensheet.elk.sh/${SHEET_ID}/Sheet1`;
 
-/* FETCH DATA */
-fetch(URL)
-  .then(res => res.json())
-  .then(data => {
-    const feed = document.getElementById("feed");
+    let articles = [];
+    let slides = [];
+    let current = 0;
 
-    data.forEach(item => {
-      if (!item.Title) return;
+    fetch(URL)
+      .then(res => res.json())
+      .then(data => {
+        articles = data;
+        render();
+      });
 
-      const card = document.createElement("div");
-      card.className = "card";
+    function render() {
+      const feed = document.getElementById("feed");
 
-      card.innerHTML = `
-        <img src="${item.Image || ''}">
-        <div class="overlay">
-          <div class="category">${item.Category || "News"}</div>
-          <div class="headline">${item.Title}</div>
-          <div class="hook">${item.Hook || ""}</div>
+      feed.innerHTML = articles.map((item, i) => `
+        <div class="card" onclick="openModal(${i})">
+          <img class="card-img" src="${item.Image || ''}">
+          <div class="card-body">
+            <div class="headline">${item.Title}</div>
+            <div class="hook-text">${item.Hook || ''}</div>
+          </div>
         </div>
-        <div class="arrow">→</div>
-      `;
+      `).join("");
+    }
 
-      card.onclick = () => openModal(item);
-      feed.appendChild(card);
-    });
-  });
+    function openModal(i) {
+      const item = articles[i];
 
-/* MODAL LOGIC (DATA-AGNOSTIC) */
-function openModal(item) {
-  const values = Object.values(item);
+      slides = [
+        item.Title,
+        item.Hook,
+        item["Heres what happened"],
+        item["Why it matters"],
+        item["What happens next?"]
+      ].filter(Boolean);
 
-  slides = values
-    .slice(0, 9)              // take first columns
-    .filter(v => v && v !== "Pending");
+      current = 0;
+      document.getElementById("modal").classList.add("open");
+      show();
+    }
 
-  slides.splice(1,1);         // remove URL
+    function show() {
+      document.getElementById("slideWrap").innerHTML =
+        `<div class="slide-content">${slides[current]}</div>`;
+    }
 
-  currentSlide = 0;
-  document.getElementById("modal").style.display = "flex";
-  showSlide();
-}
+    function nextSlide() {
+      current++;
+      if (current >= slides.length) {
+        closeModal();
+      } else {
+        show();
+      }
+    }
 
-function showSlide() {
-  document.getElementById("slideText").innerText = slides[currentSlide];
-}
+    function prevSlide() {
+      if (current > 0) {
+        current--;
+        show();
+      }
+    }
 
-function nextSlide() {
-  currentSlide++;
-  if (currentSlide >= slides.length) {
-    closeModal();
-  } else {
-    showSlide();
-  }
-}
-
-function closeModal() {
-  document.getElementById("modal").style.display = "none";
-}
-</script>
+    function closeModal() {
+      document.getElementById("modal").classList.remove("open");
+    }
+  </script>
 
 </body>
 </html>
