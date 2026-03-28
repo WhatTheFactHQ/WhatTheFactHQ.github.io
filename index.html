@@ -4,32 +4,59 @@
   <meta charset="UTF-8">
   <title>WhatTheFact</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- FONT -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: 'Inter', sans-serif;
       background: #0B0B0B;
       color: white;
     }
 
+    /* HEADER */
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 12px;
+      border-bottom: 1px solid #222;
+    }
+
+    .logo {
+      height: 34px;
+      border-radius: 6px;
+    }
+
+    .brand {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .tagline {
+      font-size: 12px;
+      opacity: 0.7;
+    }
+
+    /* FEED */
     .container {
       padding: 12px;
     }
 
     .card {
-      background: #121212;
       border-radius: 16px;
-      margin-bottom: 16px;
+      margin-bottom: 18px;
       overflow: hidden;
       position: relative;
       cursor: pointer;
+      background: #121212;
     }
 
     .card img {
       width: 100%;
-      height: 200px;
+      height: 220px;
       object-fit: cover;
     }
 
@@ -37,40 +64,41 @@
       position: absolute;
       bottom: 0;
       width: 100%;
-      padding: 12px;
-      background: linear-gradient(transparent, rgba(0,0,0,0.9));
+      padding: 16px;
+      background: linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0.2));
     }
 
     .category {
-  font-size: 11px;
-  background: #EF4444;
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-weight: 600;
-  letter-spacing: 0.3px;
-}
+      font-size: 11px;
+      background: #EF4444;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      display: inline-block;
+    }
 
     .headline {
-  font-size: 20px;
-  font-weight: 700;
-  line-height: 1.3;
-}
-    
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .hook {
+      font-size: 13px;
+      opacity: 0.85;
+      margin-top: 4px;
+    }
 
     .arrow {
       position: absolute;
       right: 12px;
       bottom: 12px;
       font-size: 18px;
-      opacity: 0.7;
-      animation: bounce 1.2s infinite;
+      opacity: 0.6;
     }
 
-    @keyframes bounce {
-      0%,100% { transform: translateX(0); }
-      50% { transform: translateX(5px); }
-    }
-
+    /* MODAL */
     .modal {
       position: fixed;
       top: 0;
@@ -79,15 +107,16 @@
       height: 100%;
       background: black;
       display: none;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
+      text-align: center;
       padding: 20px;
     }
 
     .slide {
-      max-width: 400px;
-      text-align: center;
+      max-width: 420px;
+      font-size: 18px;
+      line-height: 1.5;
     }
 
     .close {
@@ -105,14 +134,26 @@
       font-size: 24px;
       cursor: pointer;
     }
-
   </style>
 </head>
 
 <body>
 
+<!-- HEADER -->
+<div class="header">
+  <!-- 🔁 Replace logo.png with your actual filename -->
+  <img src="logo.png" class="logo">
+
+  <div>
+    <div class="brand">WhatTheFact</div>
+    <div class="tagline">Quick. Clear. News.</div>
+  </div>
+</div>
+
+<!-- FEED -->
 <div class="container" id="feed"></div>
 
+<!-- MODAL -->
 <div class="modal" id="modal">
   <div class="close" onclick="closeModal()">✕</div>
   <div class="slide" id="slideText"></div>
@@ -120,45 +161,48 @@
 </div>
 
 <script>
-
 const SHEET_ID = "1egfyMk99niiivs2usEi6oFEHWHFF6XR5QvbTpdlVxdw";
 const URL = `https://opensheet.elk.sh/${SHEET_ID}/Sheet1`;
 
 let slides = [];
 let currentSlide = 0;
 
+/* FETCH DATA */
 fetch(URL)
   .then(res => res.json())
   .then(data => {
     const feed = document.getElementById("feed");
 
     data.forEach(item => {
+      if (!item.Title) return;
+
       const card = document.createElement("div");
       card.className = "card";
 
       card.innerHTML = `
-        <img src="${item.Image}">
+        <img src="${item.Image || ''}">
         <div class="overlay">
-          <div class="category">${item.Category || "General"}</div>
+          <div class="category">${item.Category || "News"}</div>
           <div class="headline">${item.Title}</div>
+          <div class="hook">${item.Hook || ""}</div>
         </div>
         <div class="arrow">→</div>
       `;
 
       card.onclick = () => openModal(item);
-
       feed.appendChild(card);
     });
   });
 
+/* MODAL LOGIC (DATA-AGNOSTIC) */
 function openModal(item) {
-  slides = [
-    item.Title,
-    item.Hook,
-    item["Here’s what happened"],
-    item["Why it matters"],
-    item["What happens next"]
-  ];
+  const values = Object.values(item);
+
+  slides = values
+    .slice(0, 9)              // take first columns
+    .filter(v => v && v !== "Pending");
+
+  slides.splice(1,1);         // remove URL
 
   currentSlide = 0;
   document.getElementById("modal").style.display = "flex";
@@ -181,7 +225,6 @@ function nextSlide() {
 function closeModal() {
   document.getElementById("modal").style.display = "none";
 }
-
 </script>
 
 </body>
