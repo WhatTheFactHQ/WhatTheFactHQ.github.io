@@ -1,0 +1,66 @@
+.carousel {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background: linear-gradient(to right, #f3f4f6, #e2e8f0);
+}
+
+.carousel-control {
+    position: absolute;
+    top: 50%;
+    width: 50px;
+    height: 50px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transform: translateY(-50%);
+    transition: background-color 0.3s ease;
+}
+
+.carousel-control:hover {
+    background-color: rgba(255, 255, 255, 1);
+}
+
+.carousel-indicators {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.carousel-indicator {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin: 0 5px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.carousel-indicator.active {
+    background-color: rgba(255, 255, 255, 1);
+}
+
+@keyframes fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.carousel-item {
+    display: none;
+    animation: fade 1s;
+}
+
+.carousel-item.active {
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .carousel-control {
+        width: 40px;
+        height: 40px;
+    }
+}
