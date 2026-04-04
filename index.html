@@ -1,318 +1,556 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>What The Fact - News Portal</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-    <script src="script.js" defer></script>
-    <style>
-        :root {
-            --bg: #080808;
-            --surface: #111111;
-            --border: #1C1C1C;
-            --muted: #444;
-            --text: #F2F2F2;
-            --sub: #888;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>India Conflict Impact — Intelligence Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #06060f;
+  --card: #0d0d1f;
+  --card2: #12122a;
+  --border: #1e1e3f;
+  --text: #f0f0ff;
+  --dim: #8888aa;
+  --muted: #333355;
+  --mono: 'Space Mono', monospace;
+  --display: 'Bebas Neue', sans-serif;
+  --body: 'DM Sans', sans-serif;
+  --magenta: #ff2d78;
+  --cyan: #00e5ff;
+  --yellow: #ffe600;
+  --lime: #39ff14;
+  --orange: #ff6b00;
+  --violet: #b44dff;
+  --coral: #ff4d4d;
+  --teal: #00ffcc;
+}
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--body);
+  font-size: 14px;
+  line-height: 1.55;
+  min-height: 100vh;
+  background-image:
+    radial-gradient(ellipse 80% 50% at 10% 0%, #1a003a55 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 90% 100%, #00183a44 0%, transparent 60%);
+}
+.wrap { max-width: 860px; margin: 0 auto; padding: 0 16px 80px; }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+/* HEADER */
+.header { padding: 24px 0 20px; margin-bottom: 4px; border-bottom: 1px solid var(--border); }
+.header-inner { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+.brand-eyebrow { font-family: var(--mono); font-size: 9px; letter-spacing: 0.25em; color: var(--cyan); text-transform: uppercase; margin-bottom: 6px; }
+.brand-title { font-family: var(--display); font-size: 42px; line-height: 0.95; letter-spacing: 0.02em; background: linear-gradient(135deg, #fff 30%, var(--cyan) 70%, var(--violet) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 10px; }
+.conflict-pill { display: inline-flex; align-items: center; gap: 8px; background: #ff2d7818; border: 1px solid #ff2d7866; border-radius: 100px; padding: 5px 12px 5px 8px; font-family: var(--mono); font-size: 9px; letter-spacing: 0.08em; color: var(--magenta); text-transform: uppercase; }
+.live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--magenta); animation: livePulse 1.6s infinite; flex-shrink: 0; }
+@keyframes livePulse { 0%,100%{box-shadow:0 0 0 0 #ff2d7866;opacity:1} 50%{box-shadow:0 0 0 5px #ff2d7800;opacity:.6} }
+.war-clock-block { text-align: right; }
+.war-clock-number { font-family: var(--display); font-size: 64px; line-height: 1; color: var(--yellow); text-shadow: 0 0 40px #ffe60066; letter-spacing: 0.02em; }
+.war-clock-label { font-family: var(--mono); font-size: 9px; color: var(--dim); letter-spacing: 0.15em; text-transform: uppercase; margin-top: 2px; }
+.session-line { font-family: var(--mono); font-size: 9px; color: var(--muted); margin-top: 4px; letter-spacing: 0.05em; }
 
-        body {
-            font-family: 'DM Sans', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-        }
+/* DEMO BANNER */
+.demo-banner { background: #ffe60010; border: 1px solid #ffe60033; border-radius: 6px; padding: 7px 14px; margin: 16px 0; font-family: var(--mono); font-size: 9px; color: var(--yellow); letter-spacing: 0.04em; }
 
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 18px;
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            background: var(--bg);
-            z-index: 50;
-        }
+/* ALERT BAR */
+.alert-bar { background: linear-gradient(135deg, #ff2d7815, #b44dff10); border: 1px solid #ff2d7855; border-radius: 10px; padding: 16px 18px; margin-bottom: 28px; position: relative; overflow: hidden; }
+.alert-bar::before { content:''; position:absolute; top:0;left:0;bottom:0; width:3px; background:linear-gradient(180deg,var(--magenta),var(--violet)); }
+.alert-header { display:flex; align-items:center; gap:8px; margin-bottom:12px; }
+.alert-header-label { font-family:var(--mono); font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:var(--magenta); font-weight:700; }
+.alert-count { background:var(--magenta); color:#fff; font-family:var(--mono); font-size:9px; font-weight:700; width:18px;height:18px; border-radius:50%; display:flex;align-items:center;justify-content:center; }
+.alert-item { display:flex; gap:10px; padding:10px 0; border-bottom:1px solid #ff2d7820; align-items:flex-start; }
+.alert-item:last-child { border-bottom:none; padding-bottom:0; }
+.alert-icon-box { background:#ff2d7822; border:1px solid #ff2d7855; border-radius:4px; width:28px;height:28px; display:flex;align-items:center;justify-content:center; font-size:13px; flex-shrink:0; margin-top:1px; }
+.alert-title { font-family:var(--mono); font-size:10px; font-weight:700; color:var(--magenta); letter-spacing:.05em; margin-bottom:3px; }
+.alert-text { font-size:12px; line-height:1.5; color:#ffb3c8; }
 
-        .brand-wrap {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+/* SECTION */
+.section { margin-bottom: 32px; }
+.section-head { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+.section-num { font-family:var(--display); font-size:22px; color:var(--muted); line-height:1; min-width:28px; }
+.section-title { font-family:var(--mono); font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:var(--dim); }
+.section-line { flex:1; height:1px; background:var(--border); }
 
-        .logo {
-            height: 32px;
-            border-radius: 8px;
-        }
+/* IMPACT CARDS */
+.impact-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+.impact-card { border-radius:12px; padding:18px 16px; position:relative; overflow:hidden; transition:transform .2s; cursor:default; }
+.impact-card:hover { transform:translateY(-2px); }
+.impact-card.migration { background:linear-gradient(135deg,#1a0020,#2a0030); border:1px solid var(--violet); box-shadow:0 0 30px #b44dff22 inset,0 4px 20px #b44dff18; }
+.impact-card.business { background:linear-gradient(135deg,#001a2a,#002030); border:1px solid var(--cyan); box-shadow:0 0 30px #00e5ff22 inset,0 4px 20px #00e5ff18; }
+.impact-card.livelihood { background:linear-gradient(135deg,#1a0010,#2a0015); border:1px solid var(--magenta); box-shadow:0 0 30px #ff2d7822 inset,0 4px 20px #ff2d7818; }
+.impact-glyph { font-size:28px; margin-bottom:8px; display:block; }
+.impact-label { font-family:var(--mono); font-size:8px; letter-spacing:.15em; text-transform:uppercase; margin-bottom:6px; }
+.impact-card.migration .impact-label { color:var(--violet); }
+.impact-card.business .impact-label { color:var(--cyan); }
+.impact-card.livelihood .impact-label { color:var(--magenta); }
+.impact-status { font-family:var(--display); font-size:22px; letter-spacing:.03em; line-height:1.1; margin-bottom:6px; }
+.impact-card.migration .impact-status { color:var(--violet); }
+.impact-card.business .impact-status { color:var(--cyan); }
+.impact-card.livelihood .impact-status { color:var(--magenta); }
+.impact-trend { font-family:var(--mono); font-size:10px; color:var(--dim); display:flex; align-items:center; gap:5px; }
+.arr-up { color:var(--coral); } .arr-stable { color:var(--yellow); }
 
-        .brand {
-            font-family: 'Syne';
-            font-size: 22px;
-            font-weight: 800;
-        }
+/* INDICATORS */
+.indicators-row { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+.indicator { background:var(--card); border-radius:10px; padding:14px 12px; border:1px solid var(--border); position:relative; overflow:hidden; transition:border-color .2s; }
+.indicator:hover { border-color:var(--dim); }
+.ind-accent { position:absolute; top:0;left:0;right:0; height:2px; }
+.ind-accent.a1 { background:linear-gradient(90deg,var(--orange),var(--yellow)); }
+.ind-accent.a2 { background:linear-gradient(90deg,var(--yellow),var(--lime)); }
+.ind-accent.a3 { background:linear-gradient(90deg,var(--coral),var(--magenta)); }
+.ind-accent.a4 { background:linear-gradient(90deg,var(--cyan),var(--teal)); }
+.ind-name { font-family:var(--mono); font-size:8px; letter-spacing:.1em; text-transform:uppercase; color:var(--dim); margin-bottom:6px; }
+.ind-value { font-family:var(--display); font-size:28px; line-height:1; margin-bottom:4px; }
+.c1{color:var(--orange)} .c2{color:var(--yellow)} .c3{color:var(--coral)} .c4{color:var(--cyan)}
+.ind-delta { font-family:var(--mono); font-size:9px; font-weight:700; margin-bottom:2px; }
+.ind-delta.bad{color:var(--coral)} .ind-delta.warn{color:var(--yellow)}
+.ind-baseline { font-family:var(--mono); font-size:8px; color:var(--muted); }
 
-        .brand span {
-            color: #FF3B3B;
-        }
+/* TABLE */
+.cat-table { width:100%; border-collapse:collapse; }
+.cat-table thead th { font-family:var(--mono); font-size:8px; letter-spacing:.15em; text-transform:uppercase; color:var(--muted); padding:6px 10px; text-align:left; font-weight:400; border-bottom:1px solid var(--border); }
+.cat-table tbody tr.data-row { border-bottom:1px solid var(--border); cursor:pointer; transition:background .15s; }
+.cat-table tbody tr.data-row:hover { background:#ffffff05; }
+.cat-table tbody tr.data-row.expanded { background:#ffffff07; }
+.cat-table td { padding:10px; vertical-align:middle; }
+.cat-name-text { font-size:12.5px; font-weight:600; color:var(--text); }
+.cat-sub { font-family:var(--mono); font-size:9px; color:var(--muted); margin-top:1px; }
+.badge { display:inline-flex; align-items:center; gap:5px; font-family:var(--mono); font-size:8px; letter-spacing:.07em; padding:3px 8px; border-radius:100px; font-weight:700; text-transform:uppercase; white-space:nowrap; }
+.badge.active { background:#ff2d7820; color:var(--magenta); border:1px solid #ff2d7855; }
+.badge.monitoring { background:#ffe60018; color:var(--yellow); border:1px solid #ffe60055; }
+.badge.dormant { background:#ffffff08; color:var(--muted); border:1px solid var(--border); }
+.badge.stale { background:#ff6b0015; color:var(--orange); border:1px dashed #ff6b0055; }
+.risk-indicator { display:flex; align-items:center; gap:5px; font-family:var(--mono); font-size:9px; }
+.risk-bar { width:28px; height:4px; border-radius:2px; background:var(--border); overflow:hidden; }
+.risk-fill { height:100%; border-radius:2px; }
+.risk-fill.high { width:100%; background:var(--coral); }
+.risk-fill.med { width:60%; background:var(--yellow); }
+.risk-fill.low { width:25%; background:var(--lime); }
+.rl-high{color:var(--coral)} .rl-med{color:var(--yellow)} .rl-low{color:var(--lime)} .rl-none{color:var(--muted)}
+.trend-cell { font-size:18px; font-weight:700; }
+.tu{color:var(--coral)} .ts{color:var(--yellow)} .td{color:var(--lime)} .tn{color:var(--muted)}
+.cat-note-text { font-size:11px; color:var(--dim); line-height:1.4; max-width:220px; }
+.stale-note-text { font-family:var(--mono); font-size:9px; color:var(--orange); }
+.chev { font-family:var(--mono); font-size:11px; color:var(--muted); transition:color .15s,transform .2s; display:inline-block; }
+.data-row:hover .chev { color:var(--cyan); }
+.data-row.expanded .chev { color:var(--cyan); }
 
-        .tagline {
-            font-size: 11px;
-            color: var(--sub);
-        }
+/* BRIEF EXPAND */
+.brief-row td { padding:0!important; cursor:default; }
+.brief-inner { display:none; padding:16px 16px 16px 20px; background:linear-gradient(135deg,#0a0a20,#0d0d25); border-left:3px solid var(--cyan); margin:0; animation:bslide .2s ease; }
+.brief-inner.open { display:block; }
+@keyframes bslide { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
+.brief-text { font-size:13px; line-height:1.7; color:#c8c8e8; margin-bottom:12px; }
+.brief-text em { color:var(--cyan); font-style:normal; font-weight:600; }
+.source-line { display:flex; align-items:center; gap:6px; margin-bottom:10px; flex-wrap:wrap; }
+.source-label { font-family:var(--mono); font-size:8px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+.source-tag { font-family:var(--mono); font-size:9px; color:var(--teal); background:#00ffcc12; border:1px solid #00ffcc33; border-radius:4px; padding:1px 7px; }
+.chips { display:flex; flex-wrap:wrap; gap:6px; padding-top:10px; border-top:1px solid var(--border); }
+.chip { font-family:var(--mono); font-size:9px; padding:2px 8px; border-radius:4px; background:var(--card2); color:var(--dim); border:1px solid var(--border); }
+.chip.h { background:#39ff1415; color:var(--lime); border-color:#39ff1440; }
+.chip.s { background:#ffe60015; color:var(--yellow); border-color:#ffe60040; }
+.monitoring-note { font-size:12px; font-style:italic; color:var(--dim); line-height:1.6; }
 
-        main {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
+/* SECOND ORDER */
+.chain-list { list-style:none; }
+.chain-item { display:flex; gap:12px; padding:12px 0; border-bottom:1px solid var(--border); align-items:flex-start; }
+.chain-item:last-child { border-bottom:none; }
+.chain-num { font-family:var(--display); font-size:28px; color:var(--muted); line-height:1; min-width:28px; flex-shrink:0; margin-top:-2px; }
+.chain-body { font-size:12.5px; color:var(--dim); line-height:1.6; }
+.chain-body strong { color:var(--text); font-weight:600; }
+.ca { color:var(--violet); font-family:var(--mono); margin:0 4px; font-size:12px; }
 
-        .carousel-container {
-            margin-bottom: 50px;
-            animation: fadeIn 0.8s ease-out;
-        }
+/* WATCH */
+.watch-list { list-style:none; display:flex; flex-direction:column; gap:10px; }
+.watch-item { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px 16px; display:flex; gap:14px; align-items:flex-start; transition:border-color .2s; }
+.watch-item:hover { border-color:var(--yellow); }
+.watch-num { font-family:var(--display); font-size:32px; color:var(--yellow); line-height:1; min-width:24px; flex-shrink:0; margin-top:-2px; }
+.watch-metric { font-size:13px; font-weight:700; color:var(--text); margin-bottom:4px; }
+.watch-why { font-size:12px; color:var(--dim); line-height:1.5; margin-bottom:5px; }
+.watch-signal { font-family:var(--mono); font-size:9px; color:var(--yellow); background:#ffe60010; border:1px solid #ffe60030; border-radius:4px; padding:3px 8px; display:inline-block; }
 
-        .carousel-container h2 {
-            color: var(--text);
-            margin-bottom: 20px;
-            font-size: 1.8rem;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-        }
+/* SIGNAL SUMMARY */
+.signal-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin-bottom:14px; }
+.signal-pill { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:12px 8px; text-align:center; transition:border-color .2s; }
+.signal-pill.dom { border-color:var(--violet); background:#b44dff12; }
+.stype { font-family:var(--mono); font-size:8px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+.signal-pill.dom .stype { color:var(--violet); }
+.scount { font-family:var(--display); font-size:32px; color:#555577; line-height:1; margin-top:4px; }
+.signal-pill.dom .scount { color:var(--violet); }
+.stress-meter { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px 16px; }
+.stress-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+.stress-title { font-family:var(--mono); font-size:9px; letter-spacing:.15em; text-transform:uppercase; color:var(--dim); }
+.stress-pct { font-family:var(--display); font-size:28px; color:var(--orange); line-height:1; }
+.stress-track { height:6px; background:var(--border); border-radius:3px; overflow:hidden; margin-bottom:8px; }
+.stress-fill { height:100%; border-radius:3px; background:linear-gradient(90deg,var(--yellow),var(--orange),var(--coral)); animation:gbar 1.4s ease forwards; width:0; }
+@keyframes gbar { to{width:62%} }
+.stress-note { font-size:11.5px; color:var(--dim); line-height:1.4; }
 
-        .carousel {
-            position: relative;
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-            background: var(--surface);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            border: 1px solid var(--border);
-        }
+/* FOOTER */
+.footer { border-top:1px solid var(--border); padding-top:20px; margin-top:40px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; }
+.footer-brand { font-family:var(--display); font-size:18px; letter-spacing:.05em; background:linear-gradient(90deg,var(--cyan),var(--violet)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.footer-note { font-family:var(--mono); font-size:9px; color:var(--muted); letter-spacing:.05em; }
 
-        .carousel-slides {
-            display: flex;
-            transition: transform 0.5s ease-in-out;
-        }
-
-        .slide {
-            min-width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--surface);
-            aspect-ratio: 4 / 3;
-        }
-
-        .slide img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .slide.active {
-            animation: fadeIn 0.5s ease-in-out;
-        }
-
-        .carousel-controls {
-            position: absolute;
-            bottom: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 10px;
-            z-index: 10;
-        }
-
-        .carousel-btn {
-            background: rgba(102, 126, 234, 0.9);
-            color: white;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .carousel-btn:hover {
-            background: rgba(102, 126, 234, 1);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-        }
-
-        .carousel-btn:active {
-            transform: translateY(0);
-        }
-
-        .carousel-indicators {
-            position: absolute;
-            bottom: 75px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 10px;
-            z-index: 10;
-        }
-
-        .indicator {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.5);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-        }
-
-        .indicator.active {
-            background: rgba(102, 126, 234, 1);
-            transform: scale(1.3);
-            border-color: white;
-        }
-
-        .indicator:hover {
-            background: rgba(255, 255, 255, 0.8);
-            transform: scale(1.2);
-        }
-
-        footer {
-            text-align: center;
-            color: rgba(255, 255, 255, 0.6);
-            margin-top: 50px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border);
-            font-size: 0.95rem;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .carousel-container h2 {
-                font-size: 1.4rem;
-            }
-
-            .carousel-btn {
-                padding: 8px 14px;
-                font-size: 0.85rem;
-            }
-
-            .carousel-controls {
-                bottom: 10px;
-                gap: 5px;
-            }
-
-            .carousel-indicators {
-                bottom: 65px;
-            }
-
-            .indicator {
-                width: 10px;
-                height: 10px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            main {
-                padding: 20px 10px;
-            }
-
-            .carousel-container h2 {
-                font-size: 1.2rem;
-                margin-bottom: 15px;
-            }
-
-            .carousel-container {
-                margin-bottom: 35px;
-            }
-
-            .carousel-btn {
-                padding: 7px 12px;
-                font-size: 0.8rem;
-            }
-
-            .carousel-controls {
-                gap: 3px;
-            }
-
-            .indicator {
-                width: 8px;
-                height: 8px;
-            }
-
-            footer {
-                font-size: 0.85rem;
-            }
-        }
-    </style>
+/* RESPONSIVE */
+@media(max-width:620px){
+  .brand-title{font-size:32px} .war-clock-number{font-size:48px}
+  .impact-grid{grid-template-columns:1fr}
+  .indicators-row{grid-template-columns:repeat(2,1fr)}
+  .signal-grid{grid-template-columns:repeat(3,1fr)}
+  .cat-table th:nth-child(4),.cat-table td:nth-child(4){display:none}
+  .cat-note-text{max-width:110px}
+}
+</style>
 </head>
 <body>
-    <header>
-        <div class="brand-wrap">
-            <img src="logo.png" class="logo" alt="What The Fact Logo">
-            <div>
-                <div class="brand">What<span>The</span>Fact</div>
-                <div class="tagline">Quick. Clear. News.</div>
-            </div>
-        </div>
-    </header>
+<div class="wrap">
 
-    <main>
-        <section class="carousel-container">
-            <h2>Top News</h2>
-            <div class="carousel" id="top-news-carousel">
-                <div class="carousel-slides">
-                    <div class="slide active"><img src="news1.jpg" alt="Top news 1"></div>
-                    <div class="slide"><img src="news2.jpg" alt="Top news 2"></div>
-                    <div class="slide"><img src="news3.jpg" alt="Top news 3"></div>
-                </div>
-            </div>
-        </section>
+<!-- HEADER -->
+<div class="header">
+  <div class="header-inner">
+    <div>
+      <div class="brand-eyebrow">India Conflict Impact · Human-First Intelligence</div>
+      <div class="brand-title">INDIA<br>IMPACT<br>INTEL</div>
+      <div class="conflict-pill">
+        <span class="live-dot"></span>
+        Iran – Israel – US Conflict — Live Tracking
+      </div>
+    </div>
+    <div class="war-clock-block">
+      <div class="war-clock-number" id="warDay">—</div>
+      <div class="war-clock-label">Days of Conflict</div>
+      <div class="session-line" id="sessionDate">—</div>
+      <div class="session-line">Conflict start: 28 Feb 2026</div>
+    </div>
+  </div>
+</div>
 
-        <section class="carousel-container">
-            <h2>Tech News</h2>
-            <div class="carousel" id="tech-news-carousel">
-                <div class="carousel-slides">
-                    <div class="slide active"><img src="tech1.jpg" alt="Tech news 1"></div>
-                    <div class="slide"><img src="tech2.jpg" alt="Tech news 2"></div>
-                    <div class="slide"><img src="tech3.jpg" alt="Tech news 3"></div>
-                </div>
-            </div>
-        </section>
+<!-- DEMO -->
+<div class="demo-banner">⚠ DEMO MODE — Illustrative data. Replace with live V9 prompt inputs daily.</div>
 
-        <section class="carousel-container">
-            <h2>Entertainment News</h2>
-            <div class="carousel" id="entertainment-news-carousel">
-                <div class="carousel-slides">
-                    <div class="slide active"><img src="entertainment1.jpg" alt="Entertainment news 1"></div>
-                    <div class="slide"><img src="entertainment2.jpg" alt="Entertainment news 2"></div>
-                    <div class="slide"><img src="entertainment3.jpg" alt="Entertainment news 3"></div>
-                </div>
-            </div>
-        </section>
-    </main>
+<!-- ALERTS -->
+<div class="alert-bar">
+  <div class="alert-header">
+    <div class="alert-header-label">⚠ Active Alerts — Human Impact Priority</div>
+    <div class="alert-count">2</div>
+  </div>
+  <div class="alert-item">
+    <div class="alert-icon-box">🏗️</div>
+    <div>
+      <div class="alert-title">MIGRATION · SURAT · SEVERITY 4</div>
+      <div class="alert-text">Construction-sector worker mobility falling sharply in Surat's Katargam and Varachha zones. Gujarat Labour Bureau and 3 field surveys report 35–40% of day labourers have reduced worksite attendance citing fuel and transport cost pressure. Severity up from 1 at war start.</div>
+    </div>
+  </div>
+  <div class="alert-item">
+    <div class="alert-icon-box">⛽</div>
+    <div>
+      <div class="alert-title">ENERGY · NATIONAL · PRICE ALERT</div>
+      <div class="alert-text">LPG now ₹950 — 5.2% above pre-conflict baseline of ₹903 (PPAC India, Day 32). Cross-category pressure on informal food businesses in Delhi and Mumbai confirmed per Delhi &amp; UP Chamber of Commerce industry tracker. Household burden rising across urban India.</div>
+    </div>
+  </div>
+</div>
 
-    <footer>
-        <p>&copy; 2026 What The Fact HQ</p>
-    </footer>
+<!-- 01: HUMAN IMPACT -->
+<div class="section">
+  <div class="section-head"><div class="section-num">01</div><div class="section-title">Human Impact Snapshot</div><div class="section-line"></div></div>
+  <div class="impact-grid">
+    <div class="impact-card migration">
+      <span class="impact-glyph">🚶</span>
+      <div class="impact-label">Migration</div>
+      <div class="impact-status">Stress Rising</div>
+      <div class="impact-trend"><span class="arr-up">↑</span> Accelerating — 7-day</div>
+    </div>
+    <div class="impact-card business">
+      <span class="impact-glyph">🏪</span>
+      <div class="impact-label">Local Business</div>
+      <div class="impact-status">Under Pressure</div>
+      <div class="impact-trend"><span class="arr-stable">→</span> Holding — 5-day</div>
+    </div>
+    <div class="impact-card livelihood">
+      <span class="impact-glyph">💸</span>
+      <div class="impact-label">Livelihood</div>
+      <div class="impact-status">Declining</div>
+      <div class="impact-trend"><span class="arr-up">↑</span> Worsening — 7-day</div>
+    </div>
+  </div>
+</div>
+
+<!-- 02: INDICATORS -->
+<div class="section">
+  <div class="section-head"><div class="section-num">02</div><div class="section-title">Supporting Indicators</div><div class="section-line"></div></div>
+  <div class="indicators-row">
+    <div class="indicator">
+      <div class="ind-accent a1"></div>
+      <div class="ind-name">Brent Crude</div>
+      <div class="ind-value c1">$104.2</div>
+      <div class="ind-delta bad">↑ +33.2% since Day 1</div>
+      <div class="ind-baseline">Baseline: $78.2</div>
+    </div>
+    <div class="indicator">
+      <div class="ind-accent a2"></div>
+      <div class="ind-name">LPG India</div>
+      <div class="ind-value c2">₹950</div>
+      <div class="ind-delta bad">↑ +5.2% since Day 1</div>
+      <div class="ind-baseline">Baseline: ₹903</div>
+    </div>
+    <div class="indicator">
+      <div class="ind-accent a3"></div>
+      <div class="ind-name">INR / USD</div>
+      <div class="ind-value c3">92.74</div>
+      <div class="ind-delta bad">↑ +8.0% since Day 1</div>
+      <div class="ind-baseline">Baseline: 85.87</div>
+    </div>
+    <div class="indicator">
+      <div class="ind-accent a4"></div>
+      <div class="ind-name">Gulf Freight</div>
+      <div class="ind-value c4">+38%</div>
+      <div class="ind-delta warn">↑ Strait risk active</div>
+      <div class="ind-baseline">Baseline: normal</div>
+    </div>
+  </div>
+</div>
+
+<!-- 03: CATEGORY TABLE -->
+<div class="section">
+  <div class="section-head"><div class="section-num">03</div><div class="section-title">Category Status — Tap row to expand brief</div><div class="section-line"></div></div>
+  <table class="cat-table">
+    <thead>
+      <tr>
+        <th>Category</th><th>State</th><th>Risk</th><th>7d</th><th>Note</th><th></th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <!-- MIGRATION -->
+      <tr class="data-row" onclick="tog('migration')" id="row-migration">
+        <td><div class="cat-name-text">Migration &amp; Workforce</div><div class="cat-sub">Primary</div></td>
+        <td><span class="badge active">● Active</span></td>
+        <td><div class="risk-indicator"><div class="risk-bar"><div class="risk-fill high"></div></div><span class="rl-high">High</span></div></td>
+        <td class="trend-cell tu">↑</td>
+        <td><div class="cat-note-text">Worker exits accelerating, Surat construction</div></td>
+        <td><span class="chev" id="c-migration">›</span></td>
+      </tr>
+      <tr class="brief-row"><td colspan="6"><div class="brief-inner" id="e-migration">
+        <p class="brief-text">In Surat's Katargam and Varachha construction zones, migrant workers are reducing worksite attendance — <em>35–40% of surveyed day labourers</em> cite fuel and transport cost pressure. Since Day 1, worker mobility severity has risen from 1 to 4 on the platform scale, as transport costs in Gujarat have risen ~12% in lockstep with fuel prices. Labour availability in construction and logistics is already falling, with 3 large infrastructure supervisors reporting 20–30% lower daily headcounts. If LPG and transport costs remain elevated through May 2026, shortages could spread to Pune and Ahmedabad manufacturing clusters.</p>
+        <div class="source-line"><span class="source-label">Sources:</span><span class="source-tag">Gujarat Labour Bureau</span><span class="source-tag">3 independent field surveys</span><span class="source-tag">Day 33</span></div>
+        <div class="chips"><span class="chip">📍 Surat — Katargam, Varachha</span><span class="chip">📊 Severity 4/5</span><span class="chip">FLOW</span><span class="chip s">S — Soft</span></div>
+      </div></td></tr>
+
+      <!-- LOCAL BUSINESS -->
+      <tr class="data-row" onclick="tog('business')" id="row-business">
+        <td><div class="cat-name-text">Local Business Impact</div><div class="cat-sub">Primary</div></td>
+        <td><span class="badge active">● Active</span></td>
+        <td><div class="risk-indicator"><div class="risk-bar"><div class="risk-fill med"></div></div><span class="rl-med">Med</span></div></td>
+        <td class="trend-cell ts">→</td>
+        <td><div class="cat-note-text">Eateries cutting hours, Delhi &amp; Lucknow</div></td>
+        <td><span class="chev" id="c-business">›</span></td>
+      </tr>
+      <tr class="brief-row"><td colspan="6"><div class="brief-inner" id="e-business">
+        <p class="brief-text">Small food businesses in Delhi's Chandni Chowk and Lucknow's Aminabad corridor are cutting operating hours by 1–2 hours daily — <em>240 vendors tracked</em> show average daily revenue down ₹200–350. Since Day 1, LPG input costs have risen 5.2% above baseline, compressing margins for food-dependent informal businesses operating on daily float. Daily earnings decline is already reducing informal employment hours in these corridors. If LPG holds above ₹950 for 30+ consecutive days, closures are likely to escalate across dense urban food markets.</p>
+        <div class="source-line"><span class="source-label">Sources:</span><span class="source-tag">Delhi &amp; UP Chamber of Commerce</span><span class="source-tag">Industry tracker, March 2026</span></div>
+        <div class="chips"><span class="chip">📍 Delhi (Chandni Chowk), Lucknow (Aminabad)</span><span class="chip">📊 240 vendors</span><span class="chip">PRICE</span><span class="chip s">S — Soft</span></div>
+      </div></td></tr>
+
+      <!-- JOBS -->
+      <tr class="data-row" onclick="tog('jobs')" id="row-jobs">
+        <td><div class="cat-name-text">Jobs &amp; Livelihood</div><div class="cat-sub">Primary</div></td>
+        <td><span class="badge active">● Active</span></td>
+        <td><div class="risk-indicator"><div class="risk-bar"><div class="risk-fill high"></div></div><span class="rl-high">High</span></div></td>
+        <td class="trend-cell tu">↑</td>
+        <td><div class="cat-note-text">Gig + transport income falling, Mumbai &amp; Delhi</div></td>
+        <td><span class="chev" id="c-jobs">›</span></td>
+      </tr>
+      <tr class="brief-row"><td colspan="6"><div class="brief-inner" id="e-jobs">
+        <p class="brief-text">Gig delivery and auto-rickshaw operators in Mumbai and Delhi report daily net income falling by <em>₹150–300 per day</em> as fuel costs consume a rising share of earnings. Since Day 1, effective take-home for gig workers has fallen an estimated 12–18% in major metros, with higher fares suppressing booking volumes and compounding the income loss. This represents direct livelihood erosion for an estimated 2.1 million platform workers in these two cities. If crude holds above $100/barrel for another 30 days, platform-economy layoffs in last-mile logistics become a credible next signal.</p>
+        <div class="source-line"><span class="source-label">Sources:</span><span class="source-tag">Platform Worker Survey (n=1,800)</span><span class="source-tag">Day 32</span></div>
+        <div class="chips"><span class="chip">📍 Mumbai, Delhi</span><span class="chip">📊 1,800 workers</span><span class="chip">CAPACITY</span><span class="chip h">H — Hard</span></div>
+      </div></td></tr>
+
+      <!-- ENERGY -->
+      <tr class="data-row" onclick="tog('energy')" id="row-energy">
+        <td><div class="cat-name-text">Energy</div><div class="cat-sub">Supporting</div></td>
+        <td><span class="badge active">● Active</span></td>
+        <td><div class="risk-indicator"><div class="risk-bar"><div class="risk-fill high"></div></div><span class="rl-high">High</span></div></td>
+        <td class="trend-cell tu">↑</td>
+        <td><div class="cat-note-text">Brent +33.2%, LPG +5.2% vs baseline</div></td>
+        <td><span class="chev" id="c-energy">›</span></td>
+      </tr>
+      <tr class="brief-row"><td colspan="6"><div class="brief-inner" id="e-energy">
+        <p class="brief-text">Brent crude closed at <em>$104.2/barrel</em> on Day 35, a 33.2% surge from the pre-conflict baseline of $78.2, driven by Strait of Hormuz risk premiums compounding supply tightness. India's LPG cylinder price has risen to ₹950, up 5.2% from the ₹903 baseline, increasing the household and government subsidy burden. Rising fuel costs are feeding directly into transport, logistics, and urban food business operating expenses. If Brent crosses $110/barrel — increasingly likely given Iran's Hormuz posture — India's CAD could widen 0.6–0.8% of GDP in Q1 FY27.</p>
+        <div class="source-line"><span class="source-label">Sources:</span><span class="source-tag">Reuters</span><span class="source-tag">PPAC India</span><span class="source-tag">RBI</span><span class="source-tag">Day 35</span></div>
+        <div class="chips"><span class="chip">📍 National / Strait of Hormuz</span><span class="chip">📊 Brent $104.2 · LPG ₹950</span><span class="chip">PRICE</span><span class="chip h">H — Hard</span></div>
+      </div></td></tr>
+
+      <!-- SUPPLY CHAIN -->
+      <tr class="data-row" onclick="tog('supply')" id="row-supply">
+        <td><div class="cat-name-text">Supply Chain &amp; Trade</div><div class="cat-sub">Supporting</div></td>
+        <td><span class="badge monitoring">◎ Monitoring</span></td>
+        <td><div class="risk-indicator"><div class="risk-bar"><div class="risk-fill med"></div></div><span class="rl-med">Med</span></div></td>
+        <td class="trend-cell tu">↑</td>
+        <td><div class="cat-note-text">Gulf freight +38%; fertilizer delays at Mundra</div></td>
+        <td><span class="chev" id="c-supply">›</span></td>
+      </tr>
+      <tr class="brief-row"><td colspan="6"><div class="brief-inner" id="e-supply">
+        <p class="monitoring-note">Monitoring — Gulf shipping freight index up 38% (Drewry World Container Index, Day 33); fertilizer shipment delays at Mundra port — Severity 2; rerouting via Cape of Good Hope adding 9–12 days to European routes. <em>Sources: Drewry, Mundra Port Logistics Tracker.</em></p>
+      </div></td></tr>
+
+      <!-- FOOD -->
+      <tr class="data-row" onclick="tog('food')" id="row-food">
+        <td><div class="cat-name-text">Food &amp; Inflation</div><div class="cat-sub">Supporting</div></td>
+        <td><span class="badge monitoring">◎ Monitoring</span></td>
+        <td><div class="risk-indicator"><div class="risk-bar"><div class="risk-fill med"></div></div><span class="rl-med">Med</span></div></td>
+        <td class="trend-cell tu">↑</td>
+        <td><div class="cat-note-text">Edible oil +3%; fertilizer delay risk rising</div></td>
+        <td><span class="chev" id="c-food">›</span></td>
+      </tr>
+      <tr class="brief-row"><td colspan="6"><div class="brief-inner" id="e-food">
+        <p class="monitoring-note">Monitoring — Retail edible oil up ~3% in spot markets (NCDEX, Day 34); no confirmed supply disruption yet. Fertilizer import delays at Kandla port — Severity 2. Watching for Kharif season input cost impact. <em>Sources: NCDEX, Kandla Port Trust.</em></p>
+      </div></td></tr>
+
+      <!-- AVIATION -->
+      <tr class="data-row">
+        <td><div class="cat-name-text">Aviation</div><div class="cat-sub">Supporting</div></td>
+        <td><span class="badge dormant">○ Dormant</span></td>
+        <td><div class="risk-indicator"><div class="risk-bar"><div class="risk-fill low"></div></div><span class="rl-low">Low</span></div></td>
+        <td class="trend-cell tn">→</td>
+        <td><div class="cat-note-text">No active signals this session</div></td>
+        <td></td>
+      </tr>
+
+      <!-- TOURISM STALE -->
+      <tr class="data-row">
+        <td><div class="cat-name-text">Tourism</div><div class="cat-sub">Supporting</div></td>
+        <td><span class="badge stale">⚠ Stale</span></td>
+        <td><div class="risk-indicator"><div class="risk-bar"><div class="risk-fill low"></div></div><span class="rl-none">—</span></div></td>
+        <td class="trend-cell tn">?</td>
+        <td><div class="stale-note-text" id="tourismNote">calculating...</div></td>
+        <td></td>
+      </tr>
+
+      <!-- CURRENCY -->
+      <tr class="data-row" onclick="tog('currency')" id="row-currency">
+        <td><div class="cat-name-text">Currency &amp; Markets</div><div class="cat-sub">Supporting</div></td>
+        <td><span class="badge monitoring">◎ Monitoring</span></td>
+        <td><div class="risk-indicator"><div class="risk-bar"><div class="risk-fill med"></div></div><span class="rl-med">Med</span></div></td>
+        <td class="trend-cell tu">↑</td>
+        <td><div class="cat-note-text">INR 92.74 — weakest since conflict start</div></td>
+        <td><span class="chev" id="c-currency">›</span></td>
+      </tr>
+      <tr class="brief-row"><td colspan="6"><div class="brief-inner" id="e-currency">
+        <p class="monitoring-note">Monitoring — INR/USD at 92.74 (+8.0% from pre-conflict baseline of 85.87), weakest since conflict start. FII outflows of $1.2bn recorded since Day 1. RBI has intervened twice. Watching for oil import bill pressure on CAD. <em>Sources: RBI, CCIL, Day 35.</em></p>
+      </div></td></tr>
+
+    </tbody>
+  </table>
+</div>
+
+<!-- 07: SECOND ORDER -->
+<div class="section">
+  <div class="section-head"><div class="section-num">07</div><div class="section-title">Second-Order Effects</div><div class="section-line"></div></div>
+  <ul class="chain-list">
+    <li class="chain-item"><div class="chain-num">1</div><div class="chain-body"><strong>Strait of Hormuz risk premium</strong><span class="ca">→</span>India's oil import bill surges<span class="ca">→</span>CAD widens<span class="ca">→</span><strong>RBI rate cuts delayed; EMI-bearing households under extended pressure</strong></div></li>
+    <li class="chain-item"><div class="chain-num">2</div><div class="chain-body"><strong>LPG sustained at ₹950</strong><span class="ca">→</span>Informal food business margins collapse<span class="ca">→</span>Hours cut<span class="ca">→</span><strong>Daily wage workers in urban food corridors lose 2–3 hours paid employment per day</strong></div></li>
+    <li class="chain-item"><div class="chain-num">3</div><div class="chain-body"><strong>Worker mobility falling in Surat</strong><span class="ca">→</span>Construction slows<span class="ca">→</span>Project timelines extend<span class="ca">→</span><strong>Contractor earnings fall; informal credit demand rises in Gujarat belt</strong></div></li>
+    <li class="chain-item"><div class="chain-num">4</div><div class="chain-body"><strong>Gulf freight +38%</strong><span class="ca">→</span>Fertilizer delays at Mundra and Kandla<span class="ca">→</span>Agricultural input costs rise<span class="ca">→</span><strong>Small farmers in Punjab and Haryana face higher Kharif input costs by June 2026</strong></div></li>
+    <li class="chain-item"><div class="chain-num">5</div><div class="chain-body"><strong>INR at 92.74</strong><span class="ca">→</span>Import costs rise further for oil, electronics, pharma<span class="ca">→</span>CPI pressure builds<span class="ca">→</span><strong>Urban households face double squeeze: higher prices + stagnant informal wages</strong></div></li>
+  </ul>
+</div>
+
+<!-- 08: WHAT TO WATCH -->
+<div class="section">
+  <div class="section-head"><div class="section-num">08</div><div class="section-title">What to Watch — Next 24–72 Hours</div><div class="section-line"></div></div>
+  <ul class="watch-list">
+    <li class="watch-item">
+      <div class="watch-num">1</div>
+      <div>
+        <div class="watch-metric">Brent crossing $110/barrel</div>
+        <div class="watch-why">Iran's Hormuz signalling has pushed crude to $104. A $110 print triggers MoPNG review of LPG pass-through pricing. India's oil import bill is ~32% of total import value at current exchange rates.</div>
+        <div class="watch-signal">If triggered → CAD widens 0.6–0.8% GDP · LPG hike likely within 14 days</div>
+      </div>
+    </li>
+    <li class="watch-item">
+      <div class="watch-num">2</div>
+      <div>
+        <div class="watch-metric">INR breaking 94 against USD</div>
+        <div class="watch-why">At 92.74, INR is already at conflict-era lows. A break above 94 would accelerate imported inflation and likely trigger sustained RBI dollar sales, reducing forex reserve buffer.</div>
+        <div class="watch-signal">If triggered → Import inflation spikes · RBI intervention escalates</div>
+      </div>
+    </li>
+    <li class="watch-item">
+      <div class="watch-num">3</div>
+      <div>
+        <div class="watch-metric">GoI LPG price revision announcement</div>
+        <div class="watch-why">Government has absorbed costs holding at ₹950. Any revision directly spikes household and food business burden — particularly for migrant workers already at survival margin in Surat and Mumbai.</div>
+        <div class="watch-signal">If triggered → Migration severity 4 → 5 · Business closures accelerate</div>
+      </div>
+    </li>
+  </ul>
+</div>
+
+<!-- 10: SIGNAL SUMMARY -->
+<div class="section">
+  <div class="section-head"><div class="section-num">10</div><div class="section-title">Signal Type Summary</div><div class="section-line"></div></div>
+  <div class="signal-grid">
+    <div class="signal-pill dom"><div class="stype">Price</div><div class="scount">8</div></div>
+    <div class="signal-pill dom"><div class="stype">Flow</div><div class="scount">5</div></div>
+    <div class="signal-pill"><div class="stype">Capacity</div><div class="scount">3</div></div>
+    <div class="signal-pill"><div class="stype">Disruption</div><div class="scount">3</div></div>
+    <div class="signal-pill"><div class="stype">Policy</div><div class="scount">1</div></div>
+  </div>
+  <div class="stress-meter">
+    <div class="stress-top">
+      <div class="stress-title">Overall System Stress</div>
+      <div class="stress-pct">62%</div>
+    </div>
+    <div class="stress-track"><div class="stress-fill"></div></div>
+    <div class="stress-note">PRICE and FLOW signals dominant. Primary human-impact categories (Migration, Livelihood) accelerating. Economic supporting categories stable but trending upward. Elevated — not yet critical.</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-brand">INDIA IMPACT INTEL</div>
+  <div class="footer-note">V9 Prompt System · Human-First · Demo · <span id="footerDate"></span></div>
+</div>
+
+</div>
+<script>
+  // War clock
+  const warStart = new Date('2026-02-28');
+  const now = new Date();
+  const dayNum = Math.floor((now - warStart) / 86400000);
+  document.getElementById('warDay').textContent = dayNum;
+  const ds = now.toLocaleDateString('en-IN', {day:'2-digit',month:'short',year:'numeric'});
+  document.getElementById('sessionDate').textContent = 'Session: ' + ds;
+  document.getElementById('footerDate').textContent = ds;
+
+  // Tourism staleness — last updated 31 March 2026
+  const tourismLast = new Date('2026-03-31');
+  const staleDays = Math.floor((now - tourismLast) / 86400000);
+  const tourismDay = Math.floor((tourismLast - warStart) / 86400000);
+  document.getElementById('tourismNote').textContent =
+    '⚠ Stale — last updated Day ' + tourismDay + ' (' + staleDays + ' days ago)';
+
+  // Toggle briefs
+  function tog(id) {
+    const el = document.getElementById('e-' + id);
+    const ch = document.getElementById('c-' + id);
+    const row = document.getElementById('row-' + id);
+    if (!el) return;
+    const open = el.classList.contains('open');
+    document.querySelectorAll('.brief-inner').forEach(e => e.classList.remove('open'));
+    document.querySelectorAll('.chev').forEach(e => { e.style.transform=''; e.style.color=''; });
+    document.querySelectorAll('.data-row').forEach(e => e.classList.remove('expanded'));
+    if (!open) {
+      el.classList.add('open');
+      if (ch) { ch.style.transform='rotate(90deg)'; ch.style.color='var(--cyan)'; }
+      if (row) row.classList.add('expanded');
+    }
+  }
+</script>
 </body>
 </html>
